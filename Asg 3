@@ -1,0 +1,34 @@
+import java.util.Arrays;
+
+public class Main {
+	public static void main(String[] args) {
+		int[] arr = new int[100];
+ 
+		
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = i * Integer.SIZE;
+		}
+		int sum = 0;
+		int x=Runtime.getRuntime().availableProcessors();
+ 
+		int[] partialSums = new int[x];
+		 
+		System.out.println("no. of processs: " + x+"\n");
+		// Parallelize the computation of the partial sums.
+		for (int i = 0; i < x; i++) {
+			int threadId = i;
+			int start = threadId * (arr.length / x);
+			int end = (threadId + 1) * (arr.length /x);
+			partialSums[threadId] = Arrays.stream(arr, start, end).sum();
+		}
+		for (int i = 0; i < x; i++)
+		{
+			System.out.println("process 1 : "+partialSums[i]+"\n");
+		}
+		// Add the partial sums to get the final sum.
+		for (int partialSum : partialSums) {
+			sum += partialSum;
+		}
+		System.out.println("Sum:  " + sum);
+	}
+}
